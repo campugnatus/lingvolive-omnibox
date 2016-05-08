@@ -62,11 +62,10 @@
     function guessUserLanguage() {
         var uLang = chrome.i18n.getUILanguage().slice(0, 2);
 
-        if (findLangByField("abbrev", uLang)) {
+        if (findLangByField("abbrev", uLang))
             return uLang;
-        } else {
+        else
             return "ru";
-        }
     }
 
     function findLangByField (field, value) {
