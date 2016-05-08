@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+
+  "name": "Lingvo live Omnibox",
+  "description": "Perform lingvolive.ru search from Omnibox, with suggestions",
+  "version": "1.0",
+ 
+  "offline_enabled": false,
+  "options_page": "options.html",
+  "omnibox": { "keyword" : "l" },
+  "icons": {
+    "16": "favicon2.png",
+    "60": "guideline_Icon_LL.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "browser_action": {
+
+  },
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  }
+}
