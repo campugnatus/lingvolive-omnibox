@@ -142,7 +142,7 @@
 
             for (var i = 0, l = response.items.length; i < l; i++) {
                 var item = response.items[i];
-                var content, description, soundIcon = " ", delimiter = "&#x2013;";
+                var content, description, soundIcon = " ", delimiter = "&#x2013;", dict = "";
 
                 if (item.heading)
                     content = escapeXMLString(item.heading);
@@ -156,6 +156,10 @@
                 }
                 else continue;
 
+                if (item.lingvoDictionaryName) {
+                    dict = "<dim> &#x2013; "+ item.lingvoDictionaryName +"</dim>";
+                }
+
                 if (item.lingvoSoundFileName && item.lingvoDictionaryName) {
                     sounds[content] = [item.lingvoSoundFileName, item.lingvoDictionaryName];
                     soundIcon = " &#9834; ";
@@ -163,7 +167,7 @@
 
                 suggestions.push({
                     content: content,
-                    description: "<url>" + content + "</url> " + delimiter + soundIcon + description
+                    description: "<url>" + content + "</url> " + delimiter + soundIcon + description + dict
                 });
             }
 
