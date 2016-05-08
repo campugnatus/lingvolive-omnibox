@@ -9,8 +9,8 @@
   "options_page": "options.html",
   "omnibox": { "keyword" : "l" },
   "icons": {
-    "16": "favicon2.png",
-    "60": "guideline_Icon_LL.png"
+    "16": "16.png",
+    "128": "128.png"
   },
   "permissions": [
     "storage"
