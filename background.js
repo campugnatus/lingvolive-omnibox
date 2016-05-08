@@ -20,7 +20,6 @@
     chrome.storage.sync.get(["l1", "l2"], function(items) {
         if (chrome.runtime.lastError)
             return console.log("Error: couldn't access chrome storage: ", chrome.runtime.lastError.message);
-        console.log("Sync get:", items);
 
         // First time?
         if (typeof items.l1 === 'undefined' || typeof items.l2 === 'undefined') {
@@ -34,7 +33,6 @@
         }
 
         applyLanguages(items.l1, items.l2);
-        console.log(l1, l2);
 
         chrome.omnibox.onInputChanged.addListener(onInputChanged);
         chrome.omnibox.onInputEntered.addListener(onInputEntered);
@@ -46,7 +44,6 @@
     });
 
     function applyLanguages (one, two) {
-        console.log("will apply changes", one, two)
         if (one)
             l1 = findLangByField("abbrev", one) || findLangByField("abbrev", "en");
         if (two)
@@ -56,7 +53,6 @@
             +"&pageSize=6&srcLang="+l2.langId+"&startIndex=0&prefix=";
 
         articleURL = "https://lingvolive.ru/translate/"+l1.abbrev+"-"+l2.abbrev+"/";
-        console.log(suggestURL, articleURL);
     }
 
     function guessUserLanguage() {
@@ -102,7 +98,7 @@
 
     function onInputChanged (text, suggest) {
         valid = 0;
-        console.log('inputChanged: ' + text);
+
         if (!text.length)
             return;
         if (/[~`!@#$%^&*()_\-+={}|\\[\]\/:;\"<>,.\/?]/.test(text)) {
@@ -133,8 +129,6 @@
             if (!response) {
                 return alertUser('Error: no response from lingvolive.ru');
             }
-
-            console.log("Response: ", response);
 
             if (response.items.length === 0)
                 return alertUser("Hm... lingvolive.ru haven't found anything :-/");
@@ -170,7 +164,6 @@
                 });
             }
 
-            console.log("Suggestions: ", suggestions);
             if (suggestions.length === 0)
                 return;
             delete suggestions[0].content;
@@ -183,7 +176,6 @@
     function onInputEntered (text, disposition) {
         if (!valid)
             return;
-        console.log("acceptInput: ", text, disposition);
 
         if (disposition === "newForegroundTab") { // Alt + Enter
             playAudio(text);
@@ -192,7 +184,6 @@
 
         chrome.tabs.query({ active: true, currentWindow: true },
             function (tablist) {
-                console.log("Tablist:", tablist);
                 chrome.tabs.create({
                     url: articleURL + text,
                     index: tablist[0].index
