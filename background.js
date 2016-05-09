@@ -111,7 +111,7 @@
         var suggestions = [];
 
         window.clearTimeout(timeoutId);
-        timeoutId = window.setTimeout(querySuggestions, 200);
+        timeoutId = window.setTimeout(querySuggestions, 350);
 
         function querySuggestions () {
             var x = new XMLHttpRequest();
@@ -166,8 +166,10 @@
 
             if (suggestions.length === 0)
                 return;
+
             delete suggestions[0].content;
             chrome.omnibox.setDefaultSuggestion(suggestions[0]);
+
             if (suggestions.length > 1)
                 suggest(suggestions.slice(1));
         }
