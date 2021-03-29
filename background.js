@@ -11,32 +11,39 @@
 
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
+    xhr.timeout = 2000;
+    xhr.onerror = function (e) {
+        console.log("Ajax error", new Error (e));
+    };
+    xhr.ontimeout = function (e) {
+        console.log("Timeout", new Error (e));
+    };
     xhr.onload = function () {
         languages = this.response;
+
+        chrome.storage.sync.get(["l1", "l2"], function(items) {
+            if (chrome.runtime.lastError)
+                return console.log("Error: couldn't access chrome storage: ", chrome.runtime.lastError.message);
+
+            // First time?
+            if (typeof items.l1 === 'undefined' || typeof items.l2 === 'undefined') {
+                items.l1 = "en";
+                items.l2 = guessUserLanguage();
+
+                chrome.storage.sync.set({
+                    l1: items.l1,
+                    l2: items.l2
+                });
+            }
+
+            applyLanguages(items.l1, items.l2);
+
+            chrome.omnibox.onInputChanged.addListener(onInputChanged);
+            chrome.omnibox.onInputEntered.addListener(onInputEntered);
+        });
     };
     xhr.open("GET", 'languages.json');
     xhr.send();
-
-    chrome.storage.sync.get(["l1", "l2"], function(items) {
-        if (chrome.runtime.lastError)
-            return console.log("Error: couldn't access chrome storage: ", chrome.runtime.lastError.message);
-
-        // First time?
-        if (typeof items.l1 === 'undefined' || typeof items.l2 === 'undefined') {
-            items.l1 = "en";
-            items.l2 = guessUserLanguage();
-
-            chrome.storage.sync.set({
-                l1: items.l1,
-                l2: items.l2
-            });
-        }
-
-        applyLanguages(items.l1, items.l2);
-
-        chrome.omnibox.onInputChanged.addListener(onInputChanged);
-        chrome.omnibox.onInputEntered.addListener(onInputEntered);
-    });
 
     chrome.storage.onChanged.addListener(function(changes, namespace) {
         applyLanguages("l1" in changes ? changes.l1.newValue : undefined,
@@ -49,10 +56,10 @@
         if (two)
             l2 = findLangByField("abbrev", two) || findLangByField("abbrev", "ru");
 
-        suggestURL = "https://lingvolive.ru/api/Translation/WordListPart/?dstLang="+l1.langId
+        suggestURL = "https://api.lingvolive.com/Translation/WordListPart?dstLang="+l1.langId
             +"&pageSize=6&srcLang="+l2.langId+"&startIndex=0&prefix=";
 
-        articleURL = "https://lingvolive.ru/translate/"+l1.abbrev+"-"+l2.abbrev+"/";
+        articleURL = "https://lingvolive.com/translate/"+l1.abbrev+"-"+l2.abbrev+"/";
     }
 
     function guessUserLanguage() {
@@ -92,8 +99,7 @@
             dictName = encodeURIComponent(response.items[0].lingvoDictionaryName);
         }
         if (fileName && dictName)
-            new Audio("https://lingvolive.ru/api/translation/sound?fileName=" + fileName 
-                + "&dictionaryName=" + dictName).play();
+            new Audio("https://api.lingvolive.com/sounds?uri=" + dictName + "/" + fileName).play();
     }
 
     function onInputChanged (text, suggest) {
@@ -101,7 +107,7 @@
 
         if (!text.length)
             return;
-        if (/[~`!@#$%^&*()_\-+={}|\\[\]\/:;\"<>,.\/?]/.test(text)) {
+        if (/[~`!@#$%^&*()_\+={}|\\[\]\/:;\"<>,.\/?]/.test(text)) {
             return alertUser("Error: special symbols aren't allowed");
         }
 
@@ -117,7 +123,7 @@
             var x = new XMLHttpRequest();
             x.responseType = 'json';
             x.onload = onResponse;
-            x.onerror = function () {
+            x.onerror = function (e) {
                 return alertUser("Error: network error");
             };
             x.open('GET', suggestURL+text);
@@ -127,11 +133,11 @@
         function onResponse() {
             response = this.response;
             if (!response) {
-                return alertUser('Error: no response from lingvolive.ru');
+                return alertUser('Error: no response from lingvolive.com');
             }
 
             if (response.items.length === 0)
-                return alertUser("Hm... lingvolive.ru haven't found anything :-/");
+                return alertUser("Hm... lingvolive.com hasn't found anything :-/");
 
             for (var i = 0, l = response.items.length; i < l; i++) {
                 var item = response.items[i];
@@ -181,7 +187,7 @@
 
         if (disposition === "newForegroundTab") { // Alt + Enter
             playAudio(text);
-            return;
+            return false;
         }
 
         chrome.tabs.query({ active: true, currentWindow: true },

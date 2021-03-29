@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    // display the extension's version on the page
+    var version = chrome.runtime.getManifest().version;
+    var versionDiv = document.getElementById("version");
+    versionDiv.innerText = version;
+
     var sel1 = document.getElementById("l1"),
         sel2 = document.getElementById("l2"),
         languages;
@@ -8,14 +13,17 @@ document.addEventListener('DOMContentLoaded', function() {
     xhr.responseType = 'json';
     xhr.onload = function () {
         languages = this.response;
+
+        chrome.storage.sync.get(["l1", "l2"], function(items) {
+            fillSelectIn(sel1, items.l1);
+            fillSelectIn(sel2, items.l2);
+        });
     };
     xhr.open("GET", 'languages.json');
     xhr.send();
 
-    chrome.storage.sync.get(["l1", "l2"], function(items) {
-        fillSelectIn(sel1, items.l1);
-        fillSelectIn(sel2, items.l2);
-    });
+
+
 
     function fillSelectIn (e, selected) {
         var opt;

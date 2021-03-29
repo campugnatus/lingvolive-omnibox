@@ -1,87 +1,99 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Lingvo live Omnibox Options</title>
-	<style>
-		body {
-			margin: 0px;
-			padding: 0px;
-		}
+  <head>
+    <title>Lingvo live Omnibox Options</title>
+    <style>
+    body {
+        margin: 0px;
+        padding: 0px;
+    }
 
-		.container {
-			position: absolute;
-			top: 0px; bottom: 0px; left: 0px; right: 0px;
-		}
+    .container {
+        position: absolute;
+        top: 0px; bottom: 0px; left: 0px; right: 0px;
+    }
 
-		.table {
-			display: table;
-			height: 100%;
-			width: 100%;
-		}
+    .table {
+        display: table;
+        height: 100%;
+        width: 100%;
+    }
 
-		.row {
-			display: table-row;
-		}
+    .row {
+        display: table-row;
+    }
 
-		.cell {
-			display: table-cell;
-		}
+    .cell {
+        display: table-cell;
+    }
 
-		.center {
-			vertical-align: middle;
-			text-align: center;
-			max-width: 300px;
-		}
+    .center {
+        vertical-align: middle;
+        text-align: center;
+        max-width: 300px;
+    }
 
-		.center select {
-			font-size: 200%;
-		}
+    .center select {
+        font-size: 180%;
+        width: 6em;
+    }
 
-		.center select option {
-			font-size: 50%;
-		}
+    .center select option {
+        font-size: 50%;
+    }
 
-		#arrows {
-			font-size: 250%;
-			margin: 1em;
-			display: inline-block;
-		}
+    #arrows {
+        font-size: 250%;
+        margin: 1em;
+        display: inline-block;
+    }
 
-		#arrows.animate {
-			transition: transform 0.7s, color 0.7s;
-			transform: rotate(720deg);
-		}
+    #arrows.animate {
+        transition: transform 0.7s, color 0.7s;
+        transform: rotate(720deg);
+    }
 
-		h1 {
-			font-size: 250%;
-			color: #ff2d55; 
-		}
+    h1 {
+        font-size: 200%;
+        margin-bottom: 1em;
+        color: #ff2d55;
+    }
 
-		.description {
-			font-size: 120%;
-			max-width: 500px;
-			margin: 0 auto;
-			text-align: left;
-		}
-	</style>
-</head>
-<body>
+    .description {
+        text-align: justify;
+        font-size: 120%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
 
-<div class="container">
-	<div class="table">
-		<div class="cell center">
-			<div class="description">
-				<h1><span title="All hail ABBY!">Lingvo</span> live Omnibox Options</h1>
+    #version {
+        position: absolute;
+        bottom: 1em;
+        right: 1em;
+    }
 
-				<p>This is an <i>unofficial</i> extension for lingvolive.ru brought to life by the untimely death of slovari.yandex.ru, for which we all agreed to grieve immensely. </p> 
+    #note {
+    }
+    </style>
+  </head>
+  <body>
 
-				<p>Omnibox keyword is "<b><i>l</i></b>". You can choose any two of the available languages to translate between, although Russian has the most dictionaries. If you notice a little note in a suggestion, you can hit Alt+Enter on it and someone's charming voice will pronounce that word for you.</p>
-			</div>
-			<select id="l1"></select> <span id="arrows">&#8644;</span> <select id="l2"></select>
-		</div>
+    <div class="container">
+      <div class="table">
+	<div class="cell center">
+	  <div class="description">
+	    <h1><span title="All hail ABBY!">Lingvo</span> live Omnibox Options</h1>
+
+	    <p>This is an <i>unofficial</i> extension for lingvolive.com brought to life by the untimely death of slovari.yandex.ru, which I miss to this day.</p>
+
+	    <p>Omnibox keyword is <b>l</b> for <b>l</b>ingvo. You can choose any two of the available languages to translate between, although Russian has most dictionaries. If you notice a <i id="note">&#9834;</i> in a suggestion, that means you can hit Alt+Enter on it and someone's charming voice will pronounce that word for you.</p>
+	  </div>
+	  <select id="l1"></select> <span id="arrows">&#8644;</span> <select id="l2"></select>
 	</div>
-</div>
+        <div id="version"></div>
+      </div>
+    </div>
 
-<script src="options.js"></script>
-</body>
+    <script src="options.js"></script>
+  </body>
 </html>
